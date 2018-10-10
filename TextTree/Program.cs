@@ -14,17 +14,17 @@ namespace TextTree
         public static bool IsReady = false;
         static void Main(string[] args)
         {
-            LoadText(@"C:\workspace\treeTestData\people.txt", Text, IsReady);
+            LoadText(@"C:\workspace\treeTestData\people.txt", Text);
             if(IsReady==true)
             {
-                SortTree(Text, Nodes);
+                SortTreeOther(Text, Nodes);
                 ReadNodes(Nodes);
             }
             
             Console.ReadKey();
         }
 
-        public static void LoadText(string path, List<string> text, bool ready)
+        public static void LoadText(string path, List<string> text)
         {
             string line;
             
@@ -38,7 +38,7 @@ namespace TextTree
             }
             if(Text != null)
             {
-                ready = true;
+                IsReady = true;
             }
         }
 
@@ -70,6 +70,52 @@ namespace TextTree
                     nodes[i - 1].Parent.Children.Add(nodes[i]);
                 }
             }
+        }
+
+        public static void SortTreeOther(List<string> text, List<Tree> nodes)
+        {
+            for (int i = 0; i < text.Count; i++)
+            {
+
+                if (NumberOfOcc(text[i], "\t") == 0)
+                {
+                    nodes.Add(AddNode(null, text[i]));
+                }
+                else if ((NumberOfOcc(text[i], "\t")) > (NumberOfOcc(text[i - 1], "\t")))
+                {
+                    nodes.Add(AddNode(nodes[nodes.Count-1], text[i]));
+                    
+
+                }
+                else if ((NumberOfOcc(text[i], "\t")) == (NumberOfOcc(text[i - 1], "\t")))
+                {
+                    nodes.Add(AddNode(nodes[nodes.Count - 1].Parent, text[i]));
+                }
+                
+            }
+        }
+
+        public static Tree AddNode(Tree parent, string name)
+        {
+            Tree tree=new Tree(name.Trim());
+            if(parent != null)
+            {
+                tree.Parent = parent;
+                tree.Depth = parent.Depth + 1;
+                parent.Children.Add(tree);
+            }
+            else
+            {
+                tree.Depth = 0;
+            }          
+            return tree;
+        }
+
+        public static void RemoveNode(Tree node)
+        {
+            node.Parent = null;
+            node.Children = null;
+            
         }
 
         public static int NumberOfOcc(string text, string pattern)
