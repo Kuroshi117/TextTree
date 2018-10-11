@@ -111,7 +111,7 @@ namespace TextTree
                     {
                         j--;
                     }
-                    nodes.Add(AddNode(nodes[j].Parent, text[i]));
+                    nodes.Add(AddNode(nodes[j].Parent.Parent, text[i]));
 
                 }
                 
