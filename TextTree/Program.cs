@@ -69,6 +69,18 @@ namespace TextTree
                     }
                     nodes[i - 1].Parent.Children.Add(nodes[i]);
                 }
+                else if((NumberOfOcc(text[i], "\t")) < (NumberOfOcc(text[i - 1], "\t")))
+                {
+                    int d = NumberOfOcc(text[i], "\t");
+                    int j = nodes.Count-1;
+                    while(nodes[j].Depth <= d)
+                    {
+                        j--;
+                    }
+                    nodes[i].Parent = nodes[j];
+                    nodes[j].Children.Add(nodes[i]);
+
+                }
             }
         }
 
@@ -90,6 +102,17 @@ namespace TextTree
                 else if ((NumberOfOcc(text[i], "\t")) == (NumberOfOcc(text[i - 1], "\t")))
                 {
                     nodes.Add(AddNode(nodes[nodes.Count - 1].Parent, text[i]));
+                }
+                else if((NumberOfOcc(text[i], "\t")) < (NumberOfOcc(text[i - 1], "\t")))
+                {
+                    int d = NumberOfOcc(text[i], "\t");
+                    int j = nodes.Count - 1;
+                    while (nodes[j].Depth <= d)
+                    {
+                        j--;
+                    }
+                    nodes.Add(AddNode(nodes[j].Parent, text[i]));
+
                 }
                 
             }
