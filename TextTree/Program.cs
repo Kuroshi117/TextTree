@@ -17,10 +17,16 @@ namespace TextTree
             LoadText(@"C:\workspace\treeTestData\people.txt", Text);
             if(IsReady==true)
             {
+                //SortTree(Text, Nodes);
                 SortTreeOther(Text, Nodes);
                 ReadNodes(Nodes);
+                //GetNode("");
+                //GetNodes("");
+                //GetLeaves();
+                //GetInternalNodes();
+                //WriteOutlineFile(Nodes);
             }
-            
+
             Console.ReadKey();
         }
 
@@ -107,11 +113,11 @@ namespace TextTree
                 {
                     int d = NumberOfOcc(text[i], "\t");
                     int j = nodes.Count - 1;
-                    while (nodes[j].Depth <= d)
+                    while (nodes[j].Depth != d)
                     {
                         j--;
                     }
-                    nodes.Add(AddNode(nodes[j].Parent.Parent, text[i]));
+                    nodes.Add(AddNode(nodes[j].Parent, text[i]));
 
                 }
                 
@@ -139,6 +145,112 @@ namespace TextTree
             node.Parent = null;
             node.Children = null;
             
+        }
+
+        public static Tree GetNode(string name)
+        {
+            for (int i=0; i<Nodes.Count; i++)
+            {
+                if (Nodes[i].Name==name)
+                {
+                    //Console.WriteLine(Nodes[i].Name);
+                    return Nodes[i];
+                    
+                }
+
+            }
+            return null; 
+        }
+
+        public static List<Tree> GetNodes(string name)
+        {
+            List<Tree> GotNodes=new List<Tree>();
+            for (int i = 0; i < Nodes.Count; i++)
+            {
+                if (Nodes[i].Name == name)
+                {
+                    GotNodes.Add(Nodes[i]);
+
+                }
+
+            }
+            for (int j = 0; j < GotNodes.Count; j++)
+            {
+                    Console.WriteLine(GotNodes[j].Name);
+
+            }
+            return GotNodes;
+        }
+
+        public static List<Tree> GetLeaves()
+        {
+            List<Tree> GotNodes = new List<Tree>();
+            for (int i = 0; i < Nodes.Count; i++)
+            {
+                if (!Nodes[i].Children.Any())
+                {
+                    GotNodes.Add(Nodes[i]);
+
+                }
+
+            }
+            for (int j = 0; j < GotNodes.Count; j++)
+            {
+
+                Console.WriteLine(GotNodes[j].Name);
+
+            }
+            return GotNodes;
+        }
+
+        public static List<Tree> GetInternalNodes()
+        {
+            List<Tree> GotNodes = new List<Tree>();
+            for (int i = 0; i < Nodes.Count; i++)
+            {
+                if (Nodes[i].Parent == null && !Nodes[i].Children.Any())
+                {
+                    GotNodes.Add(Nodes[i]);
+
+                }
+
+            }
+            for (int j = 0; j < GotNodes.Count; j++)
+            {
+                
+                    Console.WriteLine(GotNodes[j].Name);
+
+            }
+            return GotNodes;
+        }
+
+        public static void WriteOutlineFile (List<Tree> nodes)
+        {
+            using (StreamWriter sw = new StreamWriter(@"C:\workspace\WriteHierachy.txt"))
+            {
+                //basic way
+                /*string tabs;
+                for (int i = 0; i < nodes.Count; i++)
+                {
+                    tabs = new string('\t', nodes[i].Depth);
+                    sw.WriteLine(tabs + nodes[i].Name);
+                }*/
+
+                //hierarichal way
+                List<Tree> Roots = new List<Tree>();
+                for (int i = 0; i < nodes.Count; i++)
+                {
+                    if (nodes[i].Depth == 0)
+                    {
+                        Roots.Add(nodes[i]);
+                    }
+                }
+                foreach (Tree t in Roots)
+                {
+                    WriteChildren(t, sw);
+                }
+
+            }
         }
 
         public static int NumberOfOcc(string text, string pattern)
@@ -189,6 +301,20 @@ namespace TextTree
                 foreach (Tree t in node.Children)
                 {
                     ReadChildren(t);
+                }
+            }
+        }
+
+        public static void WriteChildren(Tree node, StreamWriter sw)
+        {
+            string tabs;
+            tabs = new string('\t', node.Depth);
+            sw.WriteLine(tabs + node.Name);
+            if (node.Children != null)
+            {
+                foreach (Tree t in node.Children)
+                {
+                    WriteChildren(t, sw);
                 }
             }
         }
