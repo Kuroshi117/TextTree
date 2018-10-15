@@ -143,6 +143,10 @@ namespace TextTree
         public static void RemoveNode(Tree node)
         {
             node.Parent = null;
+            foreach (Tree c in node.Children)
+            {
+                c.Parent = null;
+            }
             node.Children = null;
             
         }
