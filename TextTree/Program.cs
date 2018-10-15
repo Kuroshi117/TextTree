@@ -155,11 +155,15 @@ namespace TextTree
         {
             for (int i=0; i<Nodes.Count; i++)
             {
-                if (Nodes[i].Name==name)
+                if (Nodes[i].Name == name)
                 {
                     //Console.WriteLine(Nodes[i].Name);
                     return Nodes[i];
-                    
+
+                }
+                else
+                {
+                    Console.WriteLine(name + " not found.");
                 }
 
             }
@@ -176,7 +180,10 @@ namespace TextTree
                     GotNodes.Add(Nodes[i]);
 
                 }
-
+                else
+                {
+                    Console.WriteLine(name + " not found.");
+                }
             }
             for (int j = 0; j < GotNodes.Count; j++)
             {
